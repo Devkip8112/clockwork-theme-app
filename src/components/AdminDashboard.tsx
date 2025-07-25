@@ -139,7 +139,7 @@ export const AdminDashboard: React.FC = () => {
         )}
 
         {/* Action buttons */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
           <Button 
             variant="clock"
             size="clock"
@@ -158,16 +158,6 @@ export const AdminDashboard: React.FC = () => {
           >
             <Clock9 className="h-8 w-8" />
             Clock Out
-          </Button>
-
-          <Button 
-            variant="outline"
-            size="clock"
-            onClick={() => window.open(window.location.origin + '#employee', '_blank')}
-            className="w-full"
-          >
-            <Users className="h-8 w-8" />
-            Employee Access
           </Button>
         </div>
 

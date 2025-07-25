@@ -10,13 +10,6 @@ export const ClockApp: React.FC = () => {
   const { state } = useApp();
 
   const renderScreen = () => {
-    // Check URL hash for employee access
-    const isEmployeeRoute = window.location.hash === '#employee';
-    
-    if (isEmployeeRoute) {
-      return <EmployeeLogin />;
-    }
-
     switch (state.currentScreen) {
       case 'welcome':
         return <WelcomeScreen />;

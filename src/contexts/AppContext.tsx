@@ -90,11 +90,25 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const loginEmployee = async (accessCode: string) => {
     setLoading(true);
     
-    // Simulate API call and employee lookup
+    // Mock valid employee codes
+    const validEmployeeCodes = {
+      '123456': 'John Smith',
+      '789012': 'Sarah Johnson', 
+      '345678': 'Mike Davis',
+      '456789': 'Lisa Wilson',
+      '567890': 'David Brown'
+    };
+    
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Mock employee data based on access code
-    const employeeName = `Employee ${accessCode.slice(0, 2)}${accessCode.slice(-2)}`;
+    // Validate access code
+    if (!validEmployeeCodes[accessCode]) {
+      setLoading(false);
+      throw new Error('Invalid access code. Please try again.');
+    }
+    
+    const employeeName = validEmployeeCodes[accessCode];
     
     setState(prev => ({
       ...prev,

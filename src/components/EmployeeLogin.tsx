@@ -33,7 +33,15 @@ export const EmployeeLogin: React.FC = () => {
       return;
     }
 
-    await loginEmployee(accessCode);
+    try {
+      await loginEmployee(accessCode);
+    } catch (error) {
+      toast({
+        title: "Access Denied",
+        description: "Invalid employee access code. Please check and try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,11 +135,11 @@ export const EmployeeLogin: React.FC = () => {
 
           {/* Demo codes info */}
           <div className="text-center p-4 bg-secondary rounded-xl">
-            <p className="text-sm font-medium text-secondary-foreground mb-2">Demo Access Codes:</p>
+            <p className="text-sm font-medium text-secondary-foreground mb-2">Valid Access Codes:</p>
             <div className="grid grid-cols-3 gap-2 text-xs font-mono">
               <span className="bg-background px-2 py-1 rounded">123456</span>
-              <span className="bg-background px-2 py-1 rounded">789012</span>
-              <span className="bg-background px-2 py-1 rounded">345678</span>
+              <span className="bg-background px-2 py-1 rounded">122334</span>
+              <span className="bg-background px-2 py-1 rounded">135798</span>
             </div>
           </div>
 

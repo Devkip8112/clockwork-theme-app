@@ -90,18 +90,30 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const loginEmployee = async (accessCode: string) => {
     setLoading(true);
     
-    // Simulate API call and employee lookup
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    // Valid mock employee codes
+    const validCodes = ['123456', '122334', '135798'];
+    
+    if (!validCodes.includes(accessCode)) {
+      setLoading(false);
+      throw new Error('Invalid access code');
+    }
+    
     // Mock employee data based on access code
-    const employeeName = `Employee ${accessCode.slice(0, 2)}${accessCode.slice(-2)}`;
+    const employeeNames: { [key: string]: string } = {
+      '123456': 'John Smith',
+      '122334': 'Sarah Johnson', 
+      '135798': 'Mike Chen'
+    };
     
     setState(prev => ({
       ...prev,
       userRole: 'employee',
       isLoggedIn: true,
       userId: `emp_${accessCode}`,
-      userName: employeeName,
+      userName: employeeNames[accessCode],
       currentScreen: 'employee-dashboard',
       isLoading: false
     }));

@@ -2,32 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { 
-  LogOut, 
-  Clock, 
-  Clock3, 
-  Clock9, 
-  Building2, 
-  Users,
-  Activity,
-  CheckCircle
-} from 'lucide-react';
+import { LogOut, Clock, Clock3, Clock9, Building2, Users, Activity, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
 export const AdminDashboard: React.FC = () => {
-  const { state, logout, clockIn, clockOut } = useApp();
-  const { currentTheme } = useTheme();
-  const { toast } = useToast();
+  const {
+    state,
+    logout,
+    clockIn,
+    clockOut
+  } = useApp();
+  const {
+    currentTheme
+  } = useTheme();
+  const {
+    toast
+  } = useToast();
   const [currentTime, setCurrentTime] = useState(new Date());
-
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
-
   const handleClockIn = () => {
     clockIn();
     toast({
@@ -36,16 +32,14 @@ export const AdminDashboard: React.FC = () => {
       variant: "default"
     });
   };
-
   const handleClockOut = () => {
     clockOut();
     toast({
-      title: "Clocked Out Successfully", 
+      title: "Clocked Out Successfully",
       description: "Have a great day!",
       variant: "default"
     });
   };
-
   const handleLogout = () => {
     toast({
       title: "Logged out",
@@ -54,39 +48,30 @@ export const AdminDashboard: React.FC = () => {
     });
     logout();
   };
-
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hour12: true 
+      hour12: true
     });
   };
-
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
   };
-
   const lastClockEntry = state.clockEntries[0];
   const isCurrentlyClockedIn = lastClockEntry?.type === 'in';
-
-  return (
-    <div className="min-h-screen bg-gradient-surface">
+  return <div className="min-h-screen bg-gradient-surface">
       {/* Header */}
       <div className="bg-card shadow-elegant border-b border-border">
         <div className="flex items-center justify-between p-6">
           <div className="flex items-center gap-4">
-            <img 
-              src={currentTheme.logo} 
-              alt={currentTheme.name}
-              className="h-10 w-auto object-contain"
-            />
+            <img src={currentTheme.logo} alt={currentTheme.name} className="h-10 w-auto object-contain" />
             <div>
               <h1 className="text-xl font-bold text-foreground">{currentTheme.name}</h1>
               <p className="text-sm text-muted-foreground">Administrator Dashboard</p>
@@ -122,44 +107,18 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Status indicator */}
-        {lastClockEntry && (
-          <div className="mb-8 flex justify-center">
-            <div className={`flex items-center gap-3 px-6 py-3 rounded-full shadow-elegant ${
-              isCurrentlyClockedIn 
-                ? 'bg-success text-success-foreground' 
-                : 'bg-secondary text-secondary-foreground'
-            }`}>
+        {lastClockEntry && <div className="mb-8 flex justify-center">
+            <div className={`flex items-center gap-3 px-6 py-3 rounded-full shadow-elegant ${isCurrentlyClockedIn ? 'bg-success text-success-foreground' : 'bg-secondary text-secondary-foreground'}`}>
               <Activity className={`h-5 w-5 ${isCurrentlyClockedIn ? 'animate-pulse' : ''}`} />
               <span className="font-semibold">
                 Currently {isCurrentlyClockedIn ? 'Clocked In' : 'Clocked Out'}
               </span>
               {isCurrentlyClockedIn && <div className="w-2 h-2 bg-success-foreground rounded-full animate-pulse" />}
             </div>
-          </div>
-        )}
+          </div>}
 
         {/* Action buttons */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <Button 
-            variant="clock"
-            size="clock"
-            onClick={handleClockIn}
-            className="w-full"
-          >
-            <Clock3 className="h-8 w-8" />
-            Clock In
-          </Button>
-          
-          <Button 
-            variant="clock"
-            size="clock"
-            onClick={handleClockOut}
-            className="w-full"
-          >
-            <Clock9 className="h-8 w-8" />
-            Clock Out
-          </Button>
-        </div>
+        
 
         {/* Recent activity */}
         <div className="bg-card rounded-2xl p-6 shadow-elegant">
@@ -168,16 +127,10 @@ export const AdminDashboard: React.FC = () => {
             Recent Activity
           </h3>
           
-          {state.clockEntries.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">No clock entries yet today</p>
-          ) : (
-            <div className="space-y-3">
-              {state.clockEntries.slice(0, 5).map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between p-3 bg-secondary rounded-lg">
+          {state.clockEntries.length === 0 ? <p className="text-muted-foreground text-center py-8">No clock entries yet today</p> : <div className="space-y-3">
+              {state.clockEntries.slice(0, 5).map(entry => <div key={entry.id} className="flex items-center justify-between p-3 bg-secondary rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${
-                      entry.type === 'in' ? 'bg-success' : 'bg-warning'
-                    }`} />
+                    <div className={`w-3 h-3 rounded-full ${entry.type === 'in' ? 'bg-success' : 'bg-warning'}`} />
                     <span className="font-medium">
                       {entry.type === 'in' ? 'Clocked In' : 'Clocked Out'}
                     </span>
@@ -185,10 +138,8 @@ export const AdminDashboard: React.FC = () => {
                   <div className="text-sm text-muted-foreground font-mono">
                     {entry.timestamp.toLocaleTimeString()}
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                </div>)}
+            </div>}
         </div>
 
         {/* Quick stats */}
@@ -218,6 +169,5 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/contexts/AppContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { LogOut, Clock, Clock3, Clock9, Building2, Users, Activity, CheckCircle } from 'lucide-react';
+import { LogOut, Clock, Clock3, Clock9, Building2, Users, Activity, CheckCircle, UserPlus, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AddEmployeeForm } from './AddEmployeeForm';
+import { ViewLogs } from './ViewLogs';
 export const AdminDashboard: React.FC = () => {
   const {
     state,
@@ -18,6 +20,8 @@ export const AdminDashboard: React.FC = () => {
     toast
   } = useToast();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showAddEmployee, setShowAddEmployee] = useState(false);
+  const [showViewLogs, setShowViewLogs] = useState(false);
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -117,8 +121,59 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>}
 
-        {/* Action buttons */}
-        
+        {/* Employee Management Section */}
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-card rounded-2xl p-6 shadow-elegant">
+            <div className="flex items-center gap-3 mb-4">
+              <UserPlus className="h-6 w-6 text-primary" />
+              <h3 className="text-lg font-semibold text-foreground">Employee Management</h3>
+            </div>
+            <p className="text-muted-foreground mb-4">
+              Add new employees to the system with their contact information and payment details.
+            </p>
+            <Button onClick={() => setShowAddEmployee(true)} className="w-full">
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add Employee
+            </Button>
+          </div>
+
+          <div className="bg-card rounded-2xl p-6 shadow-elegant">
+            <div className="flex items-center gap-3 mb-4">
+              <FileText className="h-6 w-6 text-primary" />
+              <h3 className="text-lg font-semibold text-foreground">Time Tracking Logs</h3>
+            </div>
+            <p className="text-muted-foreground mb-4">
+              View detailed time logs, employee hours, and clock-in/out history.
+            </p>
+            <Button onClick={() => setShowViewLogs(true)} variant="outline" className="w-full">
+              <FileText className="h-4 w-4 mr-2" />
+              View Logs
+            </Button>
+          </div>
+        </div>
+
+        {/* Clock In/Out Buttons */}
+        <div className="mb-8 flex justify-center gap-4">
+          <Button
+            onClick={handleClockIn}
+            disabled={isCurrentlyClockedIn}
+            size="lg"
+            className="px-8 py-4 text-lg"
+          >
+            <Clock3 className="h-5 w-5 mr-2" />
+            Clock In
+          </Button>
+          <Button
+            onClick={handleClockOut}
+            disabled={!isCurrentlyClockedIn}
+            variant="outline"
+            size="lg"
+            className="px-8 py-4 text-lg"
+          >
+            <Clock9 className="h-5 w-5 mr-2" />
+            Clock Out
+          </Button>
+        </div>
 
         {/* Recent activity */}
         <div className="bg-card rounded-2xl p-6 shadow-elegant">
@@ -169,5 +224,15 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <AddEmployeeForm 
+        open={showAddEmployee} 
+        onOpenChange={setShowAddEmployee} 
+      />
+      <ViewLogs 
+        open={showViewLogs} 
+        onOpenChange={setShowViewLogs} 
+      />
     </div>;
 };

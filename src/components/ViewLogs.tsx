@@ -5,7 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Search, ArrowUpDown, Clock, User, X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, ArrowUpDown, Clock, User, X, Filter, Calendar } from 'lucide-react';
 
 // Mock employee data
 const mockEmployees = [
@@ -69,12 +70,54 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [selectedEmployee, setSelectedEmployee] = useState<typeof mockEmployees[0] | null>(null);
+  const [timeFilter, setTimeFilter] = useState('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const filteredAndSortedEmployees = useMemo(() => {
     let filtered = mockEmployees.filter(employee => {
       const fullName = `${employee.firstName} ${employee.lastName}`.toLowerCase();
       const search = searchTerm.toLowerCase();
-      return fullName.includes(search) || employee.email.toLowerCase().includes(search);
+      const nameEmailMatch = fullName.includes(search) || employee.email.toLowerCase().includes(search);
+
+      // Apply time filter
+      if (!nameEmailMatch) return false;
+      
+      if (timeFilter === 'all') return true;
+      
+      const now = new Date();
+      const filterDate = new Date();
+      
+      switch (timeFilter) {
+        case 'today':
+          return employee.clockEntries.some(entry => 
+            entry.date === now.toISOString().split('T')[0]
+          );
+        case 'yesterday':
+          filterDate.setDate(now.getDate() - 1);
+          return employee.clockEntries.some(entry => 
+            entry.date === filterDate.toISOString().split('T')[0]
+          );
+        case 'this-week':
+          const weekStart = new Date(now);
+          weekStart.setDate(now.getDate() - now.getDay());
+          return employee.clockEntries.some(entry => 
+            new Date(entry.date) >= weekStart
+          );
+        case 'this-month':
+          return employee.clockEntries.some(entry => {
+            const entryDate = new Date(entry.date);
+            return entryDate.getMonth() === now.getMonth() && 
+                   entryDate.getFullYear() === now.getFullYear();
+          });
+        case 'custom':
+          if (!startDate || !endDate) return true;
+          return employee.clockEntries.some(entry => 
+            entry.date >= startDate && entry.date <= endDate
+          );
+        default:
+          return true;
+      }
     });
 
     filtered.sort((a, b) => {
@@ -111,7 +154,7 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
     });
 
     return filtered;
-  }, [searchTerm, sortField, sortDirection]);
+  }, [searchTerm, sortField, sortDirection, timeFilter, startDate, endDate]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -159,20 +202,64 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
           </DialogHeader>
 
           <div className="flex-1 overflow-hidden flex flex-col">
-            {/* Search Bar */}
-            <div className="mb-4 flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search employees by name or email..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+            {/* Search and Filter Bar */}
+            <div className="mb-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search employees by name or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                <Badge variant="outline" className="px-3 py-1">
+                  {filteredAndSortedEmployees.length} employees
+                </Badge>
               </div>
-              <Badge variant="outline" className="px-3 py-1">
-                {filteredAndSortedEmployees.length} employees
-              </Badge>
+              
+              {/* Time Filter */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Time Filter:</span>
+                </div>
+                <Select value={timeFilter} onValueChange={setTimeFilter}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Time</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="yesterday">Yesterday</SelectItem>
+                    <SelectItem value="this-week">This Week</SelectItem>
+                    <SelectItem value="this-month">This Month</SelectItem>
+                    <SelectItem value="custom">Custom Range</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                {timeFilter === 'custom' && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="w-auto"
+                      />
+                      <span className="text-sm text-muted-foreground">to</span>
+                      <Input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="w-auto"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Table */}

@@ -14,6 +14,7 @@ interface EmployeeFormData {
   phoneNumber: string;
   email: string;
   payType: string;
+  payAmount: string;
   ssn: string;
 }
 
@@ -30,6 +31,7 @@ export const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ open, onOpenCh
     phoneNumber: '',
     email: '',
     payType: '',
+    payAmount: '',
     ssn: ''
   });
 
@@ -85,6 +87,7 @@ export const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ open, onOpenCh
       phoneNumber: '',
       email: '',
       payType: '',
+      payAmount: '',
       ssn: ''
     });
     setErrors({});
@@ -176,19 +179,41 @@ export const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ open, onOpenCh
             )}
           </div>
 
-          {/* Pay Type */}
-          <div className="space-y-2">
-            <Label htmlFor="payType">Pay Type (Optional)</Label>
-            <Select value={formData.payType} onValueChange={(value) => handleInputChange('payType', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select pay type" />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border border-border z-50">
-                <SelectItem value="hourly">Hourly</SelectItem>
-                <SelectItem value="weekly">Weekly</SelectItem>
-                <SelectItem value="annually">Annually</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Pay Type */}
+            <div className="space-y-2">
+              <Label htmlFor="payType">Pay Type (Optional)</Label>
+              <Select value={formData.payType} onValueChange={(value) => handleInputChange('payType', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select pay type" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border border-border z-50">
+                  <SelectItem value="hourly">Hourly</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="annually">Annually</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Pay Amount */}
+            <div className="space-y-2">
+              <Label htmlFor="payAmount">Pay Amount (Optional)</Label>
+              <Input
+                id="payAmount"
+                type="number"
+                step="0.01"
+                min="0"
+                value={formData.payAmount}
+                onChange={(e) => handleInputChange('payAmount', e.target.value)}
+                placeholder="Enter amount"
+              />
+              <p className="text-xs text-muted-foreground">
+                {formData.payType === 'hourly' ? 'Per hour rate' : 
+                 formData.payType === 'weekly' ? 'Weekly salary' :
+                 formData.payType === 'annually' ? 'Annual salary' : 
+                 'Pay amount'}
+              </p>
+            </div>
           </div>
 
           {/* SSN */}

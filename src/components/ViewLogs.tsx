@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, ArrowUpDown, Clock, User, X, Filter, Calendar } from 'lucide-react';
+import { Search, ArrowUpDown, Clock, ChevronDown, ChevronUp, Filter, Calendar } from 'lucide-react';
 
 // Mock employee data
 const mockEmployees = [
@@ -69,7 +69,7 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [selectedEmployee, setSelectedEmployee] = useState<typeof mockEmployees[0] | null>(null);
+  const [expandedEmployeeId, setExpandedEmployeeId] = useState<number | null>(null);
   const [timeFilter, setTimeFilter] = useState('all');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -294,47 +294,108 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
                 </TableHeader>
                 <TableBody>
                   {filteredAndSortedEmployees.map((employee) => (
-                    <TableRow key={employee.id} className="hover:bg-muted/50">
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">
-                            {employee.firstName} {employee.lastName}
+                    <React.Fragment key={employee.id}>
+                      <TableRow className="hover:bg-muted/50">
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">
+                              {employee.firstName} {employee.lastName}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              ID: {employee.id}
+                            </div>
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            ID: {employee.id}
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">
+                            <div>{employee.email}</div>
+                            <div className="text-muted-foreground">{employee.phone}</div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          <div>{employee.email}</div>
-                          <div className="text-muted-foreground">{employee.phone}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getPayTypeBadgeVariant(employee.payType)}>
-                          {employee.payType}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-mono font-medium">
-                          {employee.totalHours}h
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedEmployee(employee);
-                            onOpenChange(false);
-                          }}
-                        >
-                          <User className="h-4 w-4 mr-2" />
-                          View Details
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={getPayTypeBadgeVariant(employee.payType)}>
+                            {employee.payType}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-mono font-medium">
+                            {employee.totalHours}h
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setExpandedEmployeeId(
+                                expandedEmployeeId === employee.id ? null : employee.id
+                              );
+                            }}
+                          >
+                            {expandedEmployeeId === employee.id ? (
+                              <ChevronUp className="h-4 w-4 mr-2" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 mr-2" />
+                            )}
+                            {expandedEmployeeId === employee.id ? 'Hide Details' : 'View Details'}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                      
+                      {expandedEmployeeId === employee.id && (
+                        <TableRow>
+                          <TableCell colSpan={5} className="bg-muted/20 p-6">
+                            <div className="space-y-6">
+                              {/* Employee Info */}
+                              <div>
+                                <h3 className="text-lg font-semibold mb-4">Employee Information</h3>
+                                <div className="grid grid-cols-3 gap-4">
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Full Name</p>
+                                    <p className="font-medium">{employee.firstName} {employee.lastName}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Email</p>
+                                    <p className="font-medium">{employee.email}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-muted-foreground">Phone</p>
+                                    <p className="font-medium">{employee.phone}</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Clock Entries */}
+                              <div>
+                                <h3 className="text-lg font-semibold mb-4">Clock In/Out History</h3>
+                                <div className="space-y-3">
+                                  {employee.clockEntries.map((entry) => (
+                                    <div key={entry.id} className="flex items-center justify-between p-3 bg-background border rounded-lg">
+                                      <div className="flex items-center gap-3">
+                                        <div className={`w-3 h-3 rounded-full ${
+                                          entry.type === 'in' ? 'bg-green-500' : 'bg-orange-500'
+                                        }`} />
+                                        <span className="font-medium">
+                                          {entry.type === 'in' ? 'Clocked In' : 'Clocked Out'}
+                                        </span>
+                                      </div>
+                                      <div className="text-right">
+                                        <div className="font-mono font-medium">
+                                          {formatTime(entry.timestamp)}
+                                        </div>
+                                        <div className="text-sm text-muted-foreground">
+                                          {formatDate(entry.timestamp)}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   ))}
                 </TableBody>
               </Table>
@@ -349,95 +410,6 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
         </DialogContent>
       </Dialog>
 
-      {/* Employee Detail Modal */}
-      <Dialog open={!!selectedEmployee} onOpenChange={() => setSelectedEmployee(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                {selectedEmployee?.firstName} {selectedEmployee?.lastName} - Time Log Details
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedEmployee(null)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </DialogTitle>
-          </DialogHeader>
-
-          {selectedEmployee && (
-            <div className="space-y-6">
-              {/* Employee Info */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Employee Information</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Full Name</p>
-                    <p className="font-medium">{selectedEmployee.firstName} {selectedEmployee.lastName}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium">{selectedEmployee.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
-                    <p className="font-medium">{selectedEmployee.phone}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Pay Type</p>
-                    <Badge variant={getPayTypeBadgeVariant(selectedEmployee.payType)}>
-                      {selectedEmployee.payType}
-                    </Badge>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Hours</p>
-                    <p className="font-mono font-medium text-lg">{selectedEmployee.totalHours}h</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Clock Entries */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Clock In/Out History</CardTitle>
-                  <CardDescription>
-                    Recent clock entries for this employee
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {selectedEmployee.clockEntries.map((entry) => (
-                      <div key={entry.id} className="flex items-center justify-between p-3 bg-secondary rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-3 h-3 rounded-full ${
-                            entry.type === 'in' ? 'bg-success' : 'bg-warning'
-                          }`} />
-                          <span className="font-medium">
-                            {entry.type === 'in' ? 'Clocked In' : 'Clocked Out'}
-                          </span>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-mono font-medium">
-                            {formatTime(entry.timestamp)}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {formatDate(entry.timestamp)}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

@@ -5,7 +5,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { LogOut, Clock, Clock3, Clock9, Building2, Users, Activity, CheckCircle, UserPlus, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AddEmployeeForm } from './AddEmployeeForm';
-import { ViewLogs } from './ViewLogs';
+import { useNavigate } from 'react-router-dom';
 export const AdminDashboard: React.FC = () => {
   const {
     state,
@@ -145,7 +145,7 @@ export const AdminDashboard: React.FC = () => {
             <p className="text-muted-foreground mb-4">
               View detailed time logs, employee hours, and clock-in/out history.
             </p>
-            <Button onClick={() => setShowViewLogs(true)} variant="outline" className="w-full">
+            <Button onClick={() => navigate('/logs')} variant="outline" className="w-full">
               <FileText className="h-4 w-4 mr-2" />
               View Logs
             </Button>
@@ -229,10 +229,6 @@ export const AdminDashboard: React.FC = () => {
       <AddEmployeeForm 
         open={showAddEmployee} 
         onOpenChange={setShowAddEmployee} 
-      />
-      <ViewLogs 
-        open={showViewLogs} 
-        onOpenChange={setShowViewLogs} 
       />
     </div>;
 };

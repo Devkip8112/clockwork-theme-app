@@ -325,7 +325,10 @@ export const ViewLogs: React.FC<ViewLogsProps> = ({ open, onOpenChange }) => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setSelectedEmployee(employee)}
+                          onClick={() => {
+                            setSelectedEmployee(employee);
+                            onOpenChange(false);
+                          }}
                         >
                           <User className="h-4 w-4 mr-2" />
                           View Details

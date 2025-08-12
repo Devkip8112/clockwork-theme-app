@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AddEmployeeForm } from './AddEmployeeForm';
 import { useNavigate } from 'react-router-dom';
 export const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const {
     state,
     logout,

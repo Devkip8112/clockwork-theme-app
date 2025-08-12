@@ -34,10 +34,10 @@ const mockEmployees = [
     payType: 'weekly',
     totalHours: 38.25,
     clockEntries: [
-      { id: 5, type: 'in', timestamp: new Date('2024-01-15T09:15:00'), date: '2024-01-15' },
-      { id: 6, type: 'out', timestamp: new Date('2024-01-15T17:00:00'), date: '2024-01-15' },
-      { id: 7, type: 'in', timestamp: new Date('2024-01-14T09:00:00'), date: '2024-01-14' },
-      { id: 8, type: 'out', timestamp: new Date('2024-01-14T16:45:00'), date: '2024-01-14' },
+      { id: 5, type: 'in' as const, timestamp: new Date('2024-01-15T09:15:00'), date: '2024-01-15' },
+      { id: 6, type: 'out' as const, timestamp: new Date('2024-01-15T17:00:00'), date: '2024-01-15' },
+      { id: 7, type: 'in' as const, timestamp: new Date('2024-01-14T09:00:00'), date: '2024-01-14' },
+      { id: 8, type: 'out' as const, timestamp: new Date('2024-01-14T16:45:00'), date: '2024-01-14' },
     ]
   },
   {
@@ -49,10 +49,10 @@ const mockEmployees = [
     payType: 'annually',
     totalHours: 45.0,
     clockEntries: [
-      { id: 9, type: 'in', timestamp: new Date('2024-01-15T08:30:00'), date: '2024-01-15' },
-      { id: 10, type: 'out', timestamp: new Date('2024-01-15T18:00:00'), date: '2024-01-15' },
-      { id: 11, type: 'in', timestamp: new Date('2024-01-14T08:30:00'), date: '2024-01-14' },
-      { id: 12, type: 'out', timestamp: new Date('2024-01-14T17:30:00'), date: '2024-01-14' },
+      { id: 9, type: 'in' as const, timestamp: new Date('2024-01-15T08:30:00'), date: '2024-01-15' },
+      { id: 10, type: 'out' as const, timestamp: new Date('2024-01-15T18:00:00'), date: '2024-01-15' },
+      { id: 11, type: 'in' as const, timestamp: new Date('2024-01-14T08:30:00'), date: '2024-01-14' },
+      { id: 12, type: 'out' as const, timestamp: new Date('2024-01-14T17:30:00'), date: '2024-01-14' },
     ]
   }
 ];

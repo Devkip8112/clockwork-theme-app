@@ -254,7 +254,7 @@ export const AdminDashboard: React.FC = () => {
   const isCurrentlyClockedIn = lastClockEntry?.type === 'in';
   return <div className="min-h-screen bg-gradient-surface relative">
       {/* Add Employee Button - Fixed Corner */}
-      <div className="fixed top-4 left-4 z-50">
+      <div className="fixed bottom-4 right-4 z-50">
         <Button onClick={() => setShowAddEmployee(true)} className="shadow-lg">
           <UserPlus className="h-4 w-4 mr-2" />
           Add Employee

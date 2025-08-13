@@ -11,57 +11,96 @@ import { useToast } from '@/hooks/use-toast';
 import { AddEmployeeForm } from './AddEmployeeForm';
 import { EmployeeDetailModal } from './EmployeeDetailModal';
 // Mock employee data
-const mockEmployees = [
-  {
+const mockEmployees = [{
+  id: 1,
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@example.com',
+  phone: '(555) 123-4567',
+  payType: 'hourly',
+  totalHours: 42.5,
+  clockEntries: [{
     id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '(555) 123-4567',
-    payType: 'hourly',
-    totalHours: 42.5,
-    clockEntries: [
-      { id: 1, type: 'in' as const, timestamp: new Date('2024-01-15T09:00:00'), date: '2024-01-15' },
-      { id: 2, type: 'out' as const, timestamp: new Date('2024-01-15T17:30:00'), date: '2024-01-15' },
-      { id: 3, type: 'in' as const, timestamp: new Date('2024-01-14T08:45:00'), date: '2024-01-14' },
-      { id: 4, type: 'out' as const, timestamp: new Date('2024-01-14T17:00:00'), date: '2024-01-14' },
-    ]
-  },
-  {
+    type: 'in' as const,
+    timestamp: new Date('2024-01-15T09:00:00'),
+    date: '2024-01-15'
+  }, {
     id: 2,
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-    phone: '(555) 987-6543',
-    payType: 'weekly',
-    totalHours: 38.25,
-    clockEntries: [
-      { id: 5, type: 'in' as const, timestamp: new Date('2024-01-15T09:15:00'), date: '2024-01-15' },
-      { id: 6, type: 'out' as const, timestamp: new Date('2024-01-15T17:00:00'), date: '2024-01-15' },
-      { id: 7, type: 'in' as const, timestamp: new Date('2024-01-14T09:00:00'), date: '2024-01-14' },
-      { id: 8, type: 'out' as const, timestamp: new Date('2024-01-14T16:45:00'), date: '2024-01-14' },
-    ]
-  },
-  {
+    type: 'out' as const,
+    timestamp: new Date('2024-01-15T17:30:00'),
+    date: '2024-01-15'
+  }, {
     id: 3,
-    firstName: 'Mike',
-    lastName: 'Johnson',
-    email: 'mike.johnson@example.com',
-    phone: '(555) 456-7890',
-    payType: 'annually',
-    totalHours: 45.0,
-    clockEntries: [
-      { id: 9, type: 'in' as const, timestamp: new Date('2024-01-15T08:30:00'), date: '2024-01-15' },
-      { id: 10, type: 'out' as const, timestamp: new Date('2024-01-15T18:00:00'), date: '2024-01-15' },
-      { id: 11, type: 'in' as const, timestamp: new Date('2024-01-14T08:30:00'), date: '2024-01-14' },
-      { id: 12, type: 'out' as const, timestamp: new Date('2024-01-14T17:30:00'), date: '2024-01-14' },
-    ]
-  }
-];
-
+    type: 'in' as const,
+    timestamp: new Date('2024-01-14T08:45:00'),
+    date: '2024-01-14'
+  }, {
+    id: 4,
+    type: 'out' as const,
+    timestamp: new Date('2024-01-14T17:00:00'),
+    date: '2024-01-14'
+  }]
+}, {
+  id: 2,
+  firstName: 'Jane',
+  lastName: 'Smith',
+  email: 'jane.smith@example.com',
+  phone: '(555) 987-6543',
+  payType: 'weekly',
+  totalHours: 38.25,
+  clockEntries: [{
+    id: 5,
+    type: 'in' as const,
+    timestamp: new Date('2024-01-15T09:15:00'),
+    date: '2024-01-15'
+  }, {
+    id: 6,
+    type: 'out' as const,
+    timestamp: new Date('2024-01-15T17:00:00'),
+    date: '2024-01-15'
+  }, {
+    id: 7,
+    type: 'in' as const,
+    timestamp: new Date('2024-01-14T09:00:00'),
+    date: '2024-01-14'
+  }, {
+    id: 8,
+    type: 'out' as const,
+    timestamp: new Date('2024-01-14T16:45:00'),
+    date: '2024-01-14'
+  }]
+}, {
+  id: 3,
+  firstName: 'Mike',
+  lastName: 'Johnson',
+  email: 'mike.johnson@example.com',
+  phone: '(555) 456-7890',
+  payType: 'annually',
+  totalHours: 45.0,
+  clockEntries: [{
+    id: 9,
+    type: 'in' as const,
+    timestamp: new Date('2024-01-15T08:30:00'),
+    date: '2024-01-15'
+  }, {
+    id: 10,
+    type: 'out' as const,
+    timestamp: new Date('2024-01-15T18:00:00'),
+    date: '2024-01-15'
+  }, {
+    id: 11,
+    type: 'in' as const,
+    timestamp: new Date('2024-01-14T08:30:00'),
+    date: '2024-01-14'
+  }, {
+    id: 12,
+    type: 'out' as const,
+    timestamp: new Date('2024-01-14T17:30:00'),
+    date: '2024-01-14'
+  }]
+}];
 type SortField = 'name' | 'totalHours' | 'email';
 type SortDirection = 'asc' | 'desc';
-
 export const AdminDashboard: React.FC = () => {
   const {
     state,
@@ -90,7 +129,6 @@ export const AdminDashboard: React.FC = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
-
   const filteredAndSortedEmployees = useMemo(() => {
     let filtered = mockEmployees.filter(employee => {
       const fullName = `${employee.firstName} ${employee.lastName}`.toLowerCase();
@@ -99,48 +137,34 @@ export const AdminDashboard: React.FC = () => {
 
       // Apply time filter
       if (!nameEmailMatch) return false;
-      
       if (timeFilter === 'all') return true;
-      
       const now = new Date();
       const filterDate = new Date();
-      
       switch (timeFilter) {
         case 'today':
-          return employee.clockEntries.some(entry => 
-            entry.date === now.toISOString().split('T')[0]
-          );
+          return employee.clockEntries.some(entry => entry.date === now.toISOString().split('T')[0]);
         case 'yesterday':
           filterDate.setDate(now.getDate() - 1);
-          return employee.clockEntries.some(entry => 
-            entry.date === filterDate.toISOString().split('T')[0]
-          );
+          return employee.clockEntries.some(entry => entry.date === filterDate.toISOString().split('T')[0]);
         case 'this-week':
           const weekStart = new Date(now);
           weekStart.setDate(now.getDate() - now.getDay());
-          return employee.clockEntries.some(entry => 
-            new Date(entry.date) >= weekStart
-          );
+          return employee.clockEntries.some(entry => new Date(entry.date) >= weekStart);
         case 'this-month':
           return employee.clockEntries.some(entry => {
             const entryDate = new Date(entry.date);
-            return entryDate.getMonth() === now.getMonth() && 
-                   entryDate.getFullYear() === now.getFullYear();
+            return entryDate.getMonth() === now.getMonth() && entryDate.getFullYear() === now.getFullYear();
           });
         case 'custom':
           if (!startDate || !endDate) return true;
-          return employee.clockEntries.some(entry => 
-            entry.date >= startDate && entry.date <= endDate
-          );
+          return employee.clockEntries.some(entry => entry.date >= startDate && entry.date <= endDate);
         default:
           return true;
       }
     });
-
     filtered.sort((a, b) => {
       let aValue: string | number;
       let bValue: string | number;
-
       switch (sortField) {
         case 'name':
           aValue = `${a.firstName} ${a.lastName}`;
@@ -158,21 +182,14 @@ export const AdminDashboard: React.FC = () => {
           aValue = `${a.firstName} ${a.lastName}`;
           bValue = `${b.firstName} ${b.lastName}`;
       }
-
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc' 
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
+        return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
       } else {
-        return sortDirection === 'asc' 
-          ? (aValue as number) - (bValue as number)
-          : (bValue as number) - (aValue as number);
+        return sortDirection === 'asc' ? (aValue as number) - (bValue as number) : (bValue as number) - (aValue as number);
       }
     });
-
     return filtered;
   }, [searchTerm, sortField, sortDirection, timeFilter, startDate, endDate]);
-
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
@@ -181,13 +198,16 @@ export const AdminDashboard: React.FC = () => {
       setSortDirection('asc');
     }
   };
-
   const getPayTypeBadgeVariant = (payType: string) => {
     switch (payType) {
-      case 'hourly': return 'default';
-      case 'weekly': return 'secondary';
-      case 'annually': return 'outline';
-      default: return 'default';
+      case 'hourly':
+        return 'default';
+      case 'weekly':
+        return 'secondary';
+      case 'annually':
+        return 'outline';
+      default:
+        return 'default';
     }
   };
   const handleClockIn = () => {
@@ -232,7 +252,6 @@ export const AdminDashboard: React.FC = () => {
   };
   const lastClockEntry = state.clockEntries[0];
   const isCurrentlyClockedIn = lastClockEntry?.type === 'in';
-  
   return <div className="min-h-screen bg-gradient-surface relative">
       {/* Add Employee Button - Fixed Corner */}
       <div className="fixed top-4 right-4 z-50">
@@ -304,16 +323,9 @@ export const AdminDashboard: React.FC = () => {
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search employees by name or email..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+                <Input placeholder="Search employees by name or email..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
               </div>
-              <Badge variant="outline" className="px-3 py-1">
-                {filteredAndSortedEmployees.length} employees
-              </Badge>
+              
             </div>
             
             {/* Time Filter */}
@@ -336,26 +348,14 @@ export const AdminDashboard: React.FC = () => {
                 </SelectContent>
               </Select>
               
-              {timeFilter === 'custom' && (
-                <>
+              {timeFilter === 'custom' && <>
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="w-auto"
-                    />
+                    <Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-auto" />
                     <span className="text-sm text-muted-foreground">to</span>
-                    <Input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="w-auto"
-                    />
+                    <Input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-auto" />
                   </div>
-                </>
-              )}
+                </>}
             </div>
           </div>
 
@@ -365,11 +365,7 @@ export const AdminDashboard: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleSort('name')}
-                      className="h-auto p-0 font-medium hover:bg-transparent"
-                    >
+                    <Button variant="ghost" onClick={() => handleSort('name')} className="h-auto p-0 font-medium hover:bg-transparent">
                       Employee
                       <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
@@ -377,11 +373,7 @@ export const AdminDashboard: React.FC = () => {
                   <TableHead>Contact</TableHead>
                   <TableHead>Pay Type</TableHead>
                   <TableHead>
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleSort('totalHours')}
-                      className="h-auto p-0 font-medium hover:bg-transparent"
-                    >
+                    <Button variant="ghost" onClick={() => handleSort('totalHours')} className="h-auto p-0 font-medium hover:bg-transparent">
                       Total Hours
                       <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
@@ -390,8 +382,7 @@ export const AdminDashboard: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAndSortedEmployees.map((employee) => (
-                  <TableRow key={employee.id} className="hover:bg-muted/50">
+                {filteredAndSortedEmployees.map(employee => <TableRow key={employee.id} className="hover:bg-muted/50">
                     <TableCell>
                       <div>
                         <div className="font-medium">
@@ -419,45 +410,27 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedEmployee(employee)}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => setSelectedEmployee(employee)}>
                         View Details
                       </Button>
                     </TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
             </Table>
 
-            {filteredAndSortedEmployees.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
+            {filteredAndSortedEmployees.length === 0 && <div className="text-center py-8 text-muted-foreground">
                 No employees found matching your search.
-              </div>
-            )}
+              </div>}
           </div>
         </div>
 
         {/* Clock In/Out Buttons */}
         <div className="mb-8 flex justify-center gap-4">
-          <Button
-            onClick={handleClockIn}
-            disabled={isCurrentlyClockedIn}
-            size="lg"
-            className="px-8 py-4 text-lg"
-          >
+          <Button onClick={handleClockIn} disabled={isCurrentlyClockedIn} size="lg" className="px-8 py-4 text-lg">
             <Clock3 className="h-5 w-5 mr-2" />
             Clock In
           </Button>
-          <Button
-            onClick={handleClockOut}
-            disabled={!isCurrentlyClockedIn}
-            variant="outline"
-            size="lg"
-            className="px-8 py-4 text-lg"
-          >
+          <Button onClick={handleClockOut} disabled={!isCurrentlyClockedIn} variant="outline" size="lg" className="px-8 py-4 text-lg">
             <Clock9 className="h-5 w-5 mr-2" />
             Clock Out
           </Button>
@@ -493,15 +466,8 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Modals */}
-      <AddEmployeeForm 
-        open={showAddEmployee} 
-        onOpenChange={setShowAddEmployee} 
-      />
+      <AddEmployeeForm open={showAddEmployee} onOpenChange={setShowAddEmployee} />
       
-      <EmployeeDetailModal
-        employee={selectedEmployee}
-        open={!!selectedEmployee}
-        onOpenChange={(open) => !open && setSelectedEmployee(null)}
-      />
+      <EmployeeDetailModal employee={selectedEmployee} open={!!selectedEmployee} onOpenChange={open => !open && setSelectedEmployee(null)} />
     </div>;
 };

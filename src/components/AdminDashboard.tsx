@@ -321,10 +321,7 @@ export const AdminDashboard: React.FC = () => {
           {/* Search and Filter Bar */}
           <div className="mb-6 space-y-4">
             <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search employees by name or email..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
-              </div>
+              
               
             </div>
             
@@ -425,44 +422,11 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Clock In/Out Buttons */}
-        <div className="mb-8 flex justify-center gap-4">
-          <Button onClick={handleClockIn} disabled={isCurrentlyClockedIn} size="lg" className="px-8 py-4 text-lg">
-            <Clock3 className="h-5 w-5 mr-2" />
-            Clock In
-          </Button>
-          <Button onClick={handleClockOut} disabled={!isCurrentlyClockedIn} variant="outline" size="lg" className="px-8 py-4 text-lg">
-            <Clock9 className="h-5 w-5 mr-2" />
-            Clock Out
-          </Button>
-        </div>
+        
 
 
         {/* Quick stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-          <div className="bg-card rounded-xl p-4 text-center shadow-elegant">
-            <Building2 className="h-6 w-6 mx-auto mb-2 text-primary" />
-            <p className="text-sm text-muted-foreground">Property</p>
-            <p className="font-mono font-semibold">{state.propertyId}</p>
-          </div>
-          
-          <div className="bg-card rounded-xl p-4 text-center shadow-elegant">
-            <Users className="h-6 w-6 mx-auto mb-2 text-primary" />
-            <p className="text-sm text-muted-foreground">Role</p>
-            <p className="font-semibold capitalize">{state.userRole}</p>
-          </div>
-          
-          <div className="bg-card rounded-xl p-4 text-center shadow-elegant">
-            <Clock className="h-6 w-6 mx-auto mb-2 text-primary" />
-            <p className="text-sm text-muted-foreground">Entries</p>
-            <p className="font-semibold">{state.clockEntries.length}</p>
-          </div>
-          
-          <div className="bg-card rounded-xl p-4 text-center shadow-elegant">
-            <CheckCircle className="h-6 w-6 mx-auto mb-2 text-primary" />
-            <p className="text-sm text-muted-foreground">Status</p>
-            <p className="font-semibold text-success">Active</p>
-          </div>
-        </div>
+        
       </div>
 
       {/* Modals */}

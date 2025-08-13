@@ -366,68 +366,82 @@ export const AdminDashboard: React.FC = () => {
 
           {/* Table */}
           <div className="bg-card rounded-lg shadow-elegant border border-border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>
-                    <Button variant="ghost" onClick={() => handleSort('name')} className="h-auto p-0 font-medium hover:bg-transparent">
-                      Employee
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  </TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Pay Type</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>
-                    <Button variant="ghost" onClick={() => handleSort('totalHours')} className="h-auto p-0 font-medium hover:bg-transparent">
-                      Total Hours
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  </TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAndSortedEmployees.map(employee => <TableRow key={employee.id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">
-                          {employee.firstName} {employee.lastName}
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          ID: {employee.id}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        <div>{employee.email}</div>
-                        <div className="text-muted-foreground">{employee.phone}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={getPayTypeBadgeVariant(employee.payType)}>
-                        {employee.payType}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusBadgeVariant(employee.status)}>
-                        {employee.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-mono font-medium">
-                        {employee.totalHours}h
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" onClick={() => setSelectedEmployee(employee)}>
-                        View Details
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="min-w-[140px]">
+                      <Button variant="ghost" onClick={() => handleSort('name')} className="h-auto p-0 font-medium hover:bg-transparent text-xs">
+                        Employee
+                        <ArrowUpDown className="ml-1 h-3 w-3" />
                       </Button>
-                    </TableCell>
-                  </TableRow>)}
-              </TableBody>
-            </Table>
+                    </TableHead>
+                    <TableHead className="min-w-[180px]">
+                      <span className="text-xs font-medium">Contact</span>
+                    </TableHead>
+                    <TableHead className="min-w-[80px]">
+                      <span className="text-xs font-medium">Pay</span>
+                    </TableHead>
+                    <TableHead className="min-w-[70px]">
+                      <span className="text-xs font-medium">Status</span>
+                    </TableHead>
+                    <TableHead className="min-w-[80px]">
+                      <Button variant="ghost" onClick={() => handleSort('totalHours')} className="h-auto p-0 font-medium hover:bg-transparent text-xs">
+                        Hours
+                        <ArrowUpDown className="ml-1 h-3 w-3" />
+                      </Button>
+                    </TableHead>
+                    <TableHead className="min-w-[90px]">
+                      <span className="text-xs font-medium">Actions</span>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredAndSortedEmployees.map(employee => <TableRow key={employee.id} className="hover:bg-muted/50">
+                      <TableCell className="py-2">
+                        <div>
+                          <div className="font-medium text-sm">
+                            {employee.firstName} {employee.lastName}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            ID: {employee.id}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <div className="text-xs">
+                          <div className="truncate max-w-[160px]" title={employee.email}>
+                            {employee.email}
+                          </div>
+                          <div className="text-muted-foreground truncate max-w-[120px]" title={employee.phone}>
+                            {employee.phone}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <Badge variant={getPayTypeBadgeVariant(employee.payType)} className="text-xs px-2 py-1">
+                          {employee.payType.charAt(0).toUpperCase() + employee.payType.slice(1, 3)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <Badge variant={getStatusBadgeVariant(employee.status)} className="text-xs px-2 py-1">
+                          {employee.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <div className="font-mono font-medium text-sm">
+                          {employee.totalHours}h
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <Button variant="outline" size="sm" onClick={() => setSelectedEmployee(employee)} className="text-xs px-3 py-1">
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>)}
+                </TableBody>
+              </Table>
+            </div>
 
             {filteredAndSortedEmployees.length === 0 && <div className="text-center py-8 text-muted-foreground">
                 No employees found matching your search.

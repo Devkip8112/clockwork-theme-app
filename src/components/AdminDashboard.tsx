@@ -18,6 +18,7 @@ const mockEmployees = [{
   email: 'john.doe@example.com',
   phone: '(555) 123-4567',
   payType: 'hourly',
+  status: 'active',
   totalHours: 42.5,
   clockEntries: [{
     id: 1,
@@ -47,6 +48,7 @@ const mockEmployees = [{
   email: 'jane.smith@example.com',
   phone: '(555) 987-6543',
   payType: 'weekly',
+  status: 'inactive',
   totalHours: 38.25,
   clockEntries: [{
     id: 5,
@@ -76,6 +78,7 @@ const mockEmployees = [{
   email: 'mike.johnson@example.com',
   phone: '(555) 456-7890',
   payType: 'annually',
+  status: 'active',
   totalHours: 45.0,
   clockEntries: [{
     id: 9,
@@ -208,6 +211,17 @@ export const AdminDashboard: React.FC = () => {
         return 'outline';
       default:
         return 'default';
+    }
+  };
+
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'default';
+      case 'inactive':
+        return 'destructive';
+      default:
+        return 'secondary';
     }
   };
   const handleClockIn = () => {
@@ -363,6 +377,7 @@ export const AdminDashboard: React.FC = () => {
                   </TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Pay Type</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>
                     <Button variant="ghost" onClick={() => handleSort('totalHours')} className="h-auto p-0 font-medium hover:bg-transparent">
                       Total Hours
@@ -393,6 +408,11 @@ export const AdminDashboard: React.FC = () => {
                     <TableCell>
                       <Badge variant={getPayTypeBadgeVariant(employee.payType)}>
                         {employee.payType}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusBadgeVariant(employee.status)}>
+                        {employee.status}
                       </Badge>
                     </TableCell>
                     <TableCell>

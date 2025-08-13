@@ -292,13 +292,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Current time */}
-        <div className="mb-8 text-center bg-card rounded-2xl p-6 shadow-elegant">
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground font-medium">CURRENT TIME</p>
-            <p className="text-4xl font-bold font-mono text-primary">{formatTime(currentTime)}</p>
-            <p className="text-sm text-muted-foreground">{formatDate(currentTime)}</p>
-          </div>
-        </div>
+        
 
         {/* Status indicator */}
         {lastClockEntry && <div className="mb-8 flex justify-center">

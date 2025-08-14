@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useApp } from '@/contexts/AppContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { LogOut, Clock, Clock3, Clock9, Building2, Users, Activity, CheckCircle, UserPlus, FileText, Search, ArrowUpDown, Filter, Calendar } from 'lucide-react';
+import { LogOut, Clock, Clock3, Clock9, Building2, Users, Activity, CheckCircle, UserPlus, FileText, Search, ArrowUpDown, Filter, Calendar, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AddEmployeeForm } from './AddEmployeeForm';
 import { EmployeeDetailModal } from './EmployeeDetailModal';
@@ -248,6 +248,46 @@ export const AdminDashboard: React.FC = () => {
     });
     logout();
   };
+
+  const downloadCSV = () => {
+    const headers = ['Employee Name', 'Email', 'Phone', 'Pay Type', 'Status', 'Total Hours', 'Clock Entries'];
+    
+    const csvData = filteredAndSortedEmployees.map(employee => {
+      const clockEntries = employee.clockEntries.map(entry => 
+        `${entry.type.toUpperCase()}: ${entry.timestamp.toLocaleString()}`
+      ).join('; ');
+      
+      return [
+        `${employee.firstName} ${employee.lastName}`,
+        employee.email,
+        employee.phone,
+        employee.payType,
+        employee.status,
+        employee.totalHours,
+        clockEntries
+      ];
+    });
+
+    const csvContent = [headers, ...csvData]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `employee_logs_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "CSV Downloaded",
+      description: "Employee logs exported successfully",
+      variant: "default"
+    });
+  };
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
@@ -321,10 +361,16 @@ export const AdminDashboard: React.FC = () => {
 
         {/* Employee Logs Section */}
         <div className="mb-8">
-          <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
-            <FileText className="h-6 w-6 text-primary" />
-            Employee Logs & Time Tracking
-          </h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <FileText className="h-6 w-6 text-primary" />
+              Employee Logs & Time Tracking
+            </h3>
+            <Button onClick={downloadCSV} variant="outline" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Export CSV
+            </Button>
+          </div>
           
           {/* Search and Filter Bar */}
           <div className="mb-6 space-y-4">

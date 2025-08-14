@@ -1,7 +1,9 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Clock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Clock, Download } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface ClockEntry {
   id: number;
@@ -17,6 +19,7 @@ interface Employee {
   email: string;
   phone: string;
   payType: string;
+  status: string;
   totalHours: number;
   clockEntries: ClockEntry[];
 }
@@ -32,7 +35,45 @@ export const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
   open,
   onOpenChange
 }) => {
+  const { toast } = useToast();
+  
   if (!employee) return null;
+
+  const downloadIndividualCSV = () => {
+    const headers = ['Employee Name', 'Email', 'Phone', 'Pay Type', 'Status', 'Total Hours', 'Clock Entry Type', 'Date', 'Time'];
+    
+    const csvData = employee.clockEntries.map(entry => [
+      `${employee.firstName} ${employee.lastName}`,
+      employee.email,
+      employee.phone,
+      employee.payType,
+      employee.status,
+      employee.totalHours,
+      entry.type.toUpperCase(),
+      entry.timestamp.toLocaleDateString(),
+      entry.timestamp.toLocaleTimeString()
+    ]);
+
+    const csvContent = [headers, ...csvData]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${employee.firstName}_${employee.lastName}_record_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Individual Record Downloaded",
+      description: `${employee.firstName} ${employee.lastName}'s record exported successfully`,
+      variant: "default"
+    });
+  };
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', {
@@ -63,10 +104,16 @@ export const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Employee Details - {employee.firstName} {employee.lastName}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Employee Details - {employee.firstName} {employee.lastName}
+            </DialogTitle>
+            <Button onClick={downloadIndividualCSV} variant="outline" size="sm" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Download Record
+            </Button>
+          </div>
         </DialogHeader>
 
         <div className="flex-1 overflow-auto space-y-6">
@@ -94,6 +141,12 @@ export const EmployeeDetailModal: React.FC<EmployeeDetailModalProps> = ({
                 <p className="text-sm text-muted-foreground">Pay Type</p>
                 <Badge variant={getPayTypeBadgeVariant(employee.payType)}>
                   {employee.payType}
+                </Badge>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Status</p>
+                <Badge variant={employee.status === 'active' ? 'default' : 'destructive'}>
+                  {employee.status}
                 </Badge>
               </div>
               <div>

@@ -250,21 +250,16 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const downloadCSV = () => {
-    const headers = ['Employee Name', 'Email', 'Phone', 'Pay Type', 'Status', 'Total Hours', 'Clock Entries'];
+    const headers = ['Employee Name', 'Email', 'Phone', 'Pay Type', 'Status', 'Total Hours'];
     
     const csvData = filteredAndSortedEmployees.map(employee => {
-      const clockEntries = employee.clockEntries.map(entry => 
-        `${entry.type.toUpperCase()}: ${entry.timestamp.toLocaleString()}`
-      ).join('; ');
-      
       return [
         `${employee.firstName} ${employee.lastName}`,
         employee.email,
         employee.phone,
         employee.payType,
         employee.status,
-        employee.totalHours,
-        clockEntries
+        employee.totalHours
       ];
     });
 

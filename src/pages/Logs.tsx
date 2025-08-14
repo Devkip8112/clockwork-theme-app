@@ -17,6 +17,7 @@ const mockEmployees = [
     email: 'john.doe@example.com',
     phone: '(555) 123-4567',
     payType: 'hourly',
+    status: 'active',
     totalHours: 42.5,
     clockEntries: [
       { id: 1, type: 'in' as const, timestamp: new Date('2024-01-15T09:00:00'), date: '2024-01-15' },
@@ -32,6 +33,7 @@ const mockEmployees = [
     email: 'jane.smith@example.com',
     phone: '(555) 987-6543',
     payType: 'weekly',
+    status: 'inactive',
     totalHours: 38.25,
     clockEntries: [
       { id: 5, type: 'in' as const, timestamp: new Date('2024-01-15T09:15:00'), date: '2024-01-15' },
@@ -47,6 +49,7 @@ const mockEmployees = [
     email: 'mike.johnson@example.com',
     phone: '(555) 456-7890',
     payType: 'annually',
+    status: 'active',
     totalHours: 45.0,
     clockEntries: [
       { id: 9, type: 'in' as const, timestamp: new Date('2024-01-15T08:30:00'), date: '2024-01-15' },

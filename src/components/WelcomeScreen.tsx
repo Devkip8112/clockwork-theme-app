@@ -56,7 +56,7 @@ export const WelcomeScreen: React.FC = () => {
             <h2 className="text-xl font-semibold text-foreground">Select your role:</h2>
             
             <div className="grid gap-4">
-              <Button variant="tablet" size="tablet" onClick={() => setScreen('admin-login')} className="w-full">
+              <Button variant="tablet" size="tablet" onClick={() => setScreen('admin-registration')} className="w-full">
                 <Building2 className="h-6 w-6" />
                 Administrator Access
               </Button>

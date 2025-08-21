@@ -36,47 +36,50 @@ export const AdminLogin: React.FC = () => {
 
     // Simulate sending email and auto-login after delay
     setTimeout(() => {
-      loginAdmin(propertyId);
+      // loginAdmin(propertyId);
     }, 2000);
   };
 
   if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-surface flex items-center justify-center p-6">
-        <div className="w-full max-w-md text-center space-y-6">
-          <div className="mx-auto w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center shadow-glow animate-pulse">
-            <Mail className="h-10 w-10 text-primary-foreground" />
-          </div>
+    setScreen('employee-login');
+    return null; // Prevent rendering the form again
+    // return (
+    //   // <div className="min-h-screen bg-gradient-surface flex items-center justify-center p-6">
+    //   //   <div className="w-full max-w-md text-center space-y-6">
+    //   //     <div className="mx-auto w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center shadow-glow animate-pulse">
+    //   //       <Mail className="h-10 w-10 text-primary-foreground" />
+    //   //     </div>
           
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-foreground">Check Your Email</h2>
-            <p className="text-muted-foreground">
-              A magic login link has been sent to your email address for Property ID: <span className="font-mono font-semibold">{propertyId}</span>
-            </p>
-          </div>
+    //   //     <div className="space-y-2">
+    //   //       <h2 className="text-2xl font-bold text-foreground">Check Your Email</h2>
+    //   //       <p className="text-muted-foreground">
+    //   //         A magic login link has been sent to your email address for Property ID: <span className="font-mono font-semibold">{propertyId}</span>
+    //   //       </p>
+    //   //     </div>
 
-          {state.isLoading && (
-            <div className="flex items-center justify-center gap-2 text-primary">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">Logging you in...</span>
-            </div>
-          )}
+    //   //     {state.isLoading && (
+    //   //       <div className="flex items-center justify-center gap-2 text-primary">
+    //   //         <Loader2 className="h-4 w-4 animate-spin" />
+    //   //         <span className="text-sm">Logging you in...</span>
+    //   //       </div>
+    //   //     )}
 
-          <Button 
-            variant="outline" 
-            onClick={() => {
-              setIsSubmitted(false);
-              setPropertyId('');
-              setScreen('welcome');
-            }}
-            className="w-full"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Button>
-        </div>
-      </div>
-    );
+    //   //     <Button 
+    //   //       variant="outline" 
+    //   //       onClick={() => {
+    //   //         setIsSubmitted(false);
+    //   //         setPropertyId('');
+    //   //         setScreen('welcome');
+    //   //       }}
+    //   //       className="w-full"
+    //   //     >
+    //   //       <ArrowLeft className="h-4 w-4" />
+    //   //       Back to Home
+    //   //     </Button>
+    //   //   </div>
+    //   // </div>
+    //   <div>Hello world</div>
+    // );
   }
 
   return (
@@ -107,7 +110,7 @@ export const AdminLogin: React.FC = () => {
               <Building2 className="h-8 w-8 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Administrator Login</h1>
+              <h1 className="text-3xl font-bold text-foreground">Property Login</h1>
               <p className="text-muted-foreground mt-2">
                 Enter your Property ID to receive a secure login link
               </p>

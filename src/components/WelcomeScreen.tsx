@@ -53,18 +53,16 @@ export const WelcomeScreen: React.FC = () => {
 
           {/* User type selection */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-foreground">Select your role:</h2>
-            
             <div className="grid gap-4">
-              <Button variant="tablet" size="tablet" onClick={() => setScreen('admin-registration')} className="w-full">
+              <Button variant="tablet" size="tablet" onClick={() => setScreen('admin-login')} className="w-full">
                 <Building2 className="h-6 w-6" />
-                Administrator Access
+                Access your Property
               </Button>
               
-              <Button variant="outline" size="tablet" onClick={() => setScreen('employee-login')} className="w-full">
+              {/* <Button variant="outline" size="tablet" onClick={() => setScreen('employee-login')} className="w-full">
                 <Users className="h-6 w-6" />
                 Employee Access
-              </Button>
+              </Button> */}
             </div>
           </div>
 

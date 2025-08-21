@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type UserRole = 'admin' | 'employee' | null;
-export type AppScreen = 'welcome' | 'admin-registration' | 'admin-login' | 'admin-dashboard' | 'employee-login' | 'employee-dashboard';
+export type AppScreen = 'welcome' | 'admin-login' | 'admin-dashboard' | 'employee-login' | 'employee-dashboard';
 
 export interface ClockEntry {
   id: string;
@@ -11,14 +11,6 @@ export interface ClockEntry {
   userName: string;
 }
 
-export interface AdminRegistrationData {
-  name: string;
-  email: string;
-  phone: string;
-  propertyId: string;
-  brandTheme: string;
-}
-
 export interface AppState {
   currentScreen: AppScreen;
   userRole: UserRole;
@@ -26,7 +18,6 @@ export interface AppState {
   userId: string | null;
   userName: string | null;
   propertyId: string | null;
-  adminData: AdminRegistrationData | null;
   clockEntries: ClockEntry[];
   isLoading: boolean;
 }
@@ -34,10 +25,10 @@ export interface AppState {
 interface AppContextType {
   state: AppState;
   setScreen: (screen: AppScreen) => void;
-  registerAdmin: (data: AdminRegistrationData) => Promise<void>;
   loginAdmin: (propertyId: string) => void;
   loginEmployee: (accessCode: string) => void;
   logout: () => void;
+  logoutEmmployee: () => void;
   clockIn: () => void;
   clockOut: () => void;
   setLoading: (loading: boolean) => void;
@@ -50,7 +41,6 @@ const initialState: AppState = {
   userId: null,
   userName: null,
   propertyId: null,
-  adminData: null,
   clockEntries: [],
   isLoading: false
 };
@@ -78,25 +68,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const setLoading = (loading: boolean) => {
     setState(prev => ({ ...prev, isLoading: loading }));
-  };
-
-  const registerAdmin = async (data: AdminRegistrationData) => {
-    setLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setState(prev => ({
-      ...prev,
-      adminData: data,
-      currentScreen: 'admin-dashboard',
-      userRole: 'admin',
-      isLoggedIn: true,
-      propertyId: data.propertyId,
-      userId: `admin_${data.propertyId}`,
-      userName: data.name,
-      isLoading: false
-    }));
   };
 
   const loginAdmin = async (propertyId: string) => {
@@ -152,6 +123,17 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const logout = () => {
     setState(initialState);
   };
+
+  const logoutEmmployee = () => {
+    setState(prev => ({
+      ...prev,
+      userRole: 'employee',
+      isLoggedIn: false,
+      userId: null,
+      userName: null,
+      currentScreen: 'employee-login'
+    }));
+  }
 
   const clockIn = () => {
     if (!state.userId || !state.userName) return;
@@ -209,10 +191,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     <AppContext.Provider value={{
       state,
       setScreen,
-      registerAdmin,
       loginAdmin,
       loginEmployee,
       logout,
+      logoutEmmployee,
       clockIn,
       clockOut,
       setLoading

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { MobileOptimizedButton } from '@/components/MobileOptimizedButton';
 import { useApp } from '@/contexts/AppContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Clock3, Clock9, CheckCircle, Timer, Activity, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { storeClockEntry } from '@/utils/offline';
 export const EmployeeDashboard: React.FC = () => {
   const {
     state,
-    logout,
+    logoutEmmployee,
     clockIn,
     clockOut
   } = useApp();
@@ -40,47 +38,20 @@ export const EmployeeDashboard: React.FC = () => {
     }, 1000);
     return () => clearInterval(countdownTimer);
   }, []);
-  const handleClockIn = async () => {
-    const entry = {
-      id: Date.now().toString(),
-      employeeId: state.userId || 'temp-id',
-      employeeName: state.userName || 'Unknown',
-      type: 'clock-in' as const,
-      timestamp: new Date().toISOString(),
-      propertyId: state.adminData?.propertyId || 'temp-property'
-    };
-
-    // Store offline first
-    await storeClockEntry(entry);
-    
-    // Then update app state
+  const handleClockIn = () => {
     clockIn();
-    
     toast({
       title: "Clocked In Successfully",
       description: `Good ${getTimeOfDayGreeting()}, ${state.userName}!`,
+      variant: "default"
     });
   };
-
-  const handleClockOut = async () => {
-    const entry = {
-      id: Date.now().toString(),
-      employeeId: state.userId || 'temp-id',
-      employeeName: state.userName || 'Unknown',
-      type: 'clock-out' as const,
-      timestamp: new Date().toISOString(),
-      propertyId: state.adminData?.propertyId || 'temp-property'
-    };
-
-    // Store offline first
-    await storeClockEntry(entry);
-    
-    // Then update app state
+  const handleClockOut = () => {
     clockOut();
-    
     toast({
       title: "Clocked Out Successfully",
       description: "Thank you for your hard work!",
+      variant: "default"
     });
   };
   const handleDone = () => {
@@ -89,7 +60,7 @@ export const EmployeeDashboard: React.FC = () => {
       description: "Automatically logged out",
       variant: "default"
     });
-    logout();
+    logoutEmmployee();
   };
   const getTimeOfDayGreeting = () => {
     const hour = currentTime.getHours();
@@ -159,35 +130,20 @@ export const EmployeeDashboard: React.FC = () => {
 
         {/* Action buttons */}
         <div className="space-y-4 mb-6">
-          <MobileOptimizedButton 
-            variant="default" 
-            touchSize="xl" 
-            onClick={handleClockIn} 
-            className="w-full bg-success hover:bg-success/90 text-success-foreground"
-          >
+          <Button variant="clock" size="clock" onClick={handleClockIn} className="w-full">
             <Clock3 className="h-8 w-8" />
             Clock In
-          </MobileOptimizedButton>
+          </Button>
           
-          <MobileOptimizedButton 
-            variant="default" 
-            touchSize="xl" 
-            onClick={handleClockOut} 
-            className="w-full bg-warning hover:bg-warning/90 text-warning-foreground"
-          >
+          <Button variant="clock" size="clock" onClick={handleClockOut} className="w-full">
             <Clock9 className="h-8 w-8" />
             Clock Out
-          </MobileOptimizedButton>
+          </Button>
           
-          <MobileOptimizedButton 
-            variant="outline" 
-            touchSize="large" 
-            onClick={handleDone} 
-            className="w-full"
-          >
-            <CheckCircle className="h-6 w-6" />
+          <Button variant="success" size="clock" onClick={handleDone} className="w-full">
+            <CheckCircle className="h-8 w-8" />
             Done
-          </MobileOptimizedButton>
+          </Button>
         </div>
 
         {/* Auto-logout warning */}

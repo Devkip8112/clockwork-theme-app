@@ -428,7 +428,7 @@ export const AdminDashboard: React.FC = () => {
                     </TableHead>
                     <TableHead className="min-w-[80px]">
                       <Button variant="ghost" onClick={() => handleSort('totalHours')} className="h-auto p-0 font-medium hover:bg-transparent text-xs">
-                        Hours
+                        Total Hours
                         <ArrowUpDown className="ml-1 h-3 w-3" />
                       </Button>
                     </TableHead>
@@ -461,7 +461,7 @@ export const AdminDashboard: React.FC = () => {
                       </TableCell>
                       <TableCell className="py-2">
                         <Badge variant={getPayTypeBadgeVariant(employee.payType)} className="text-xs px-2 py-1">
-                          {employee.payType.charAt(0).toUpperCase() + employee.payType.slice(1, 3)}
+                          {employee.payType}
                         </Badge>
                       </TableCell>
                       <TableCell className="py-2">
@@ -476,7 +476,7 @@ export const AdminDashboard: React.FC = () => {
                       </TableCell>
                       <TableCell className="py-2">
                         <Button variant="outline" size="sm" onClick={() => setSelectedEmployee(employee)} className="text-xs px-3 py-1">
-                          View
+                          Details
                         </Button>
                       </TableCell>
                     </TableRow>)}
@@ -490,11 +490,6 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Clock In/Out Buttons */}
-        
-
-
-        {/* Quick stats */}
         
       </div>
 
